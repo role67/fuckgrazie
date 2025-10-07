@@ -1,0 +1,492 @@
+.numbers-glitch-text {
+  color: #fff;
+  font-size: 1.08rem;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-weight: 700;
+  text-align: left;
+  margin: 0;
+  position: absolute;
+  top: 32px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 3;
+  padding: 0 14px 0 14px;
+  box-sizing: border-box;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  filter: none;
+  animation: none;
+}
+.sign-text {
+  color: #ff0000;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-top: 30px;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  animation: glowText 2s infinite alternate;
+}
+#avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+
+.banner-wrap {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  margin-bottom: 0;
+  border-radius: 24px;
+  background: transparent;
+  display: block;
+}
+
+.banner-img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0; left: 0;
+  z-index: 1;
+  border-radius: 24px 24px 0 0;
+  overflow: hidden;
+}
+
+.banner-pic {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 24px 24px 0 0;
+}
+
+.banner-wrap .avatar {
+  position: absolute;
+  left: 200px;
+  bottom: 50px;
+  transform: translateX(-50%);
+  z-index: 2;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #fff;
+  background: #f8f8fa;
+}
+.profile-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.back-btns-wrap {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  position: absolute;
+  bottom: 24px;
+  left: -20px;
+  right: 0;
+}
+.back-btn {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.85);
+  color: rgba(0, 0, 0, 0.8);
+  font-weight: 700;
+  font-size: 1.08rem;
+  padding: 8px 24px;
+  border-radius: 12px;
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.2);
+  letter-spacing: 0.5px;
+  transition: all 0.25s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.back-btn:hover, .back-btn:focus {
+  background: rgba(255, 255, 255, 0.95);
+  color: rgba(0, 0, 0, 0.9);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+.about #typing-text {
+  display: block;
+  white-space: pre-line;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 1.13rem;
+  color: rgba(0, 0, 0, 0.85);
+  text-align: left;
+  font-weight: 700;
+  min-height: 140px;
+  letter-spacing: 0.02em;
+  line-height: 1.7;
+  margin: 0;
+  margin-bottom: 60px;
+  max-width: 100%;
+  padding: 20px 32px;
+  position: relative;
+}
+.reviews-btn-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+.reviews-btn {
+  display: inline-block;
+  background: #fff;
+  color: #111;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 1.15rem;
+  padding: 7px 22px 7px 22px;
+  border-radius: 8px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  letter-spacing: 1px;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+.reviews-btn:hover, .reviews-btn:focus {
+  background: #222;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+}
+.icon-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: none;
+  box-shadow: none;
+  transition: transform 0.15s;
+  display: block;
+}
+.links a:hover .icon-logo {
+  transform: scale(1.08) rotate(-4deg);
+  background: none;
+  box-shadow: none;
+}
+html {
+  --blur-opacity: 0.35;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f8f8fa;
+  color: #222;
+  min-height: 100vh;
+  overflow: hidden;
+}
+.background {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('https://i.pinimg.com/originals/93/42/93/934293f89fbb3047fadbbab79fa39a73.gif') center center/cover no-repeat;
+  z-index: 0;
+  transition: background 0.5s;
+ }
+
+.background::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 1;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  background: transparent;
+  pointer-events: none;
+  transition: background 0.3s;
+}
+.container {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+.card {
+  width: 390px;
+  min-height: 420px;
+  background: rgba(7, 65, 164, 0.055);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  perspective: 1200px;
+  transition: box-shadow 0.3s;
+  cursor: pointer;
+  position: relative;
+  overflow: visible;
+}
+.card-face {
+  position: absolute;
+  width: 100%; height: 100%;
+  backface-visibility: hidden;
+  border-radius: 24px;
+  transition: opacity 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+.profile-info {
+  margin-top: 40px;
+  padding: 0 24px 32px 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card-front {
+  background: transparent;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.card-back {
+  background: rgba(7, 65, 164, 0.015);
+  color: #222;
+  transform: rotateY(180deg);
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+.card.flipped .card-front {
+  opacity: 0;
+  pointer-events: none;
+}
+.card.flipped .card-back {
+  opacity: 1;
+  pointer-events: auto;
+}
+.card.flipped {
+  transform: rotateY(180deg);
+}
+.nickname {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: #222;
+  letter-spacing: 1px;
+  text-align: center;
+}
+.bubble-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.bubble {
+  display: inline-block;
+  background: #fff;
+  color: #222;
+  border-radius: 16px;
+  padding: 6px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.location {
+  color: #000000;
+  font-size: 1rem;
+  margin-bottom: 18px;
+  margin-left: -20px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.geo-icon {
+  width: 22px;
+  height: 20px;
+  opacity: 1;
+}
+.links {
+  display: flex;
+    filter: drop-shadow(0 0 12px #fff);
+    animation: glowGradient 2.5s infinite linear;
+  justify-content: center;
+@keyframes glowGradient {
+  0% {
+    text-shadow: 0 0 12px #fff, 0 0 24px #ff0033, 0 0 32px #ff0033;
+    color: #fff;
+  }
+  25% {
+    text-shadow: 0 0 18px #ff0033, 0 0 32px #fff, 0 0 40px #ff0033;
+    color: #ffe0e0;
+  }
+  50% {
+    text-shadow: 0 0 24px #fff, 0 0 40px #ff0033, 0 0 48px #fff;
+    color: #fff;
+  }
+  75% {
+    text-shadow: 0 0 18px #ff0033, 0 0 32px #fff, 0 0 40px #ff0033;
+    color: #ffe0e0;
+  }
+  100% {
+    text-shadow: 0 0 12px #fff, 0 0 24px #ff0033, 0 0 32px #ff0033;
+    color: #fff;
+  }
+}
+  margin-top: 10px;
+}
+.links a {
+  background: none;
+  border-radius: 8px;
+  padding: 0;
+  text-decoration: none;
+  box-shadow: none;
+  outline: none;
+  border: none;
+  transition: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.links a:hover,
+.links a:focus,
+.links a:active {
+  background: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  border: none !important;
+}
+.about {
+  font-size: 1.08rem;
+  color: #222;
+  text-align: center;
+  margin-top: 10px;
+  line-height: 1.6;
+}
+.card {
+  transition: transform 0.7s cubic-bezier(.4,2,.6,1);
+  transform-style: preserve-3d;
+}
+.card.flipped {
+  box-shadow: 0 12px 40px rgba(0,0,0,0.22);
+}
+.background.numbers {
+  background: url('Image/bg.gif') center center/cover no-repeat !important;
+  transition: all 0.5s ease;
+}
+
+@keyframes pulseText {
+  0% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+  100% { opacity: 0.5; transform: scale(1); }
+}
+
+.card.numbers-mode {
+  background: #000000df !important;
+  box-shadow: 0 8px 32px rgba(255, 0, 0, 0.3);
+  transition: all 0.5s ease;
+}
+
+.card.numbers-mode .card-back {
+  background: #000000 !important;
+}
+
+.numbers-mode .nickname {
+  color: #ff0000;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  animation: glowText 2s infinite alternate;
+  margin-bottom: 20px;
+}
+
+@keyframes glowText {
+  from { text-shadow: 0 0 5px rgba(255, 0, 0, 0.5); }
+  to { text-shadow: 0 0 15px rgba(255, 0, 0, 0.8), 0 0 25px rgba(255, 0, 0, 0.6); }
+}
+
+.numbers-mode .banner-pic {
+  content: url('Image/bg309.jpg');
+  transition: all 0.5s ease;
+}
+
+.numbers-mode .avatar {
+  border-color: #ff0000;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+  transition: all 0.5s ease;
+}
+.card.flipped {
+  box-shadow: 0 12px 40px rgba(0,0,0,0.22);
+}
+
+.background.numbers {
+  background: #fff;
+}
+
+.card.numbers-mode .links,
+.card.numbers-mode .reviews-btn-wrap {
+  display: none !important;
+}
+.card.numbers-mode .bubble-group {
+  margin-top: 55px;
+  margin-bottom: 10px;
+  position: relative;
+  top: -25px;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.card.numbers-mode .bubble-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.card.numbers-mode .bubble {
+  background: #000;
+  color: #ff0000;
+  border: 2px solid #ff0000;
+  box-shadow: 0 0 16px #ff0000, 0 0 32px #ff0000;
+}
+.card.numbers-mode .location,
+.card.numbers-mode .back-btns-wrap {
+  display: none !important;
+}
+
+.profile-info {
+  margin-top: 24px;
+  padding: 0 24px 32px 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Исправление: насыщенный фон платформы и для планшетов */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  .card {
+    width: 370px;
+    background: rgba(7, 65, 164, 0.22) !important;
+    background-color: #1746a0 !important;
+    box-shadow: 0 8px 32px rgba(7,65,164,0.18), 0 2px 24px rgba(0,0,0,0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .banner-wrap {
+    height: 200px;
+  }
+
+  .banner-wrap .avatar {
+    width: 85px;
+    height: 85px;
+  }
+
+  .nickname {
+    font-size: 1.8rem;
+  }
+}
