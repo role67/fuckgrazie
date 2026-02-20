@@ -22,6 +22,7 @@ function initElements() {
   setupLanguageToggle();
   setupSnowToggle();
   setupSakuraToggle();
+  preloadSakuraImage();
   setupIntersectionObserver();
   setupImageLoadState();
 
@@ -41,7 +42,9 @@ if (document.readyState === 'loading') {
 }
 
 let typingTimeout;
+let numbersTypingTimeout = null;
 let typingProgressBar = null;
+let pendingNumbersTyping = false;
 
 // ============================================
 // PARALLAX EFFECT
@@ -134,7 +137,9 @@ function setupCardFlip() {
     if (card.classList.contains('flipped')) {
       // Wait for fade out, then start typing
       setTimeout(() => {
-        if (!numbersMode) {
+        if (numbersMode) {
+          startNumbersBackTyping();
+        } else {
           startTyping();
         }
       }, 400);
@@ -142,7 +147,10 @@ function setupCardFlip() {
       const typingElement = document.getElementById('typing-text');
       if (typingElement) typingElement.textContent = '';
       clearTimeout(typingTimeout);
+      clearNumbersTyping();
+      pendingNumbersTyping = numbersMode;
       removeProgressBar();
+      removeNumbersGlitchText();
     }
   });
 }
@@ -156,15 +164,15 @@ function getRandomChar() {
   return cryptChars[Math.floor(Math.random() * cryptChars.length)];
 }
 
-function createProgressBar() {
+function createProgressBar(targetElement = null, inline = false) {
   if (typingProgressBar) return;
   
-  const card = document.querySelector('.card');
-  if (!card) return;
+  const parent = targetElement || document.querySelector('.card');
+  if (!parent) return;
   
   typingProgressBar = document.createElement('div');
-  typingProgressBar.className = 'typing-progress';
-  card.appendChild(typingProgressBar);
+  typingProgressBar.className = inline ? 'typing-progress typing-progress-inline' : 'typing-progress';
+  parent.appendChild(typingProgressBar);
 }
 
 function removeProgressBar() {
@@ -176,6 +184,10 @@ function removeProgressBar() {
 
 function updateProgressBar(progress) {
   if (typingProgressBar) {
+    if (typingProgressBar.classList.contains('typing-progress-inline')) {
+      typingProgressBar.style.width = `${progress}%`;
+      return;
+    }
     const card = document.querySelector('.card');
     if (card) {
       const cardWidth = card.offsetWidth;
@@ -201,7 +213,7 @@ function startTyping() {
   clearTimeout(typingTimeout);
   removeProgressBar();
   typingElement.textContent = '';
-  createProgressBar();
+  createProgressBar(document.querySelector('.card'), false);
   
   let i = 0;
   let finalText = '';
@@ -245,6 +257,103 @@ function startTyping() {
   scramble();
 }
 
+function clearNumbersTyping() {
+  if (numbersTypingTimeout) {
+    clearTimeout(numbersTypingTimeout);
+    numbersTypingTimeout = null;
+  }
+}
+
+function removeNumbersGlitchText() {
+  const cardBack = document.querySelector('.card-back');
+  if (!cardBack) return;
+  const oldGlitch = cardBack.querySelector('.numbers-glitch-text');
+  if (oldGlitch) oldGlitch.remove();
+}
+
+function startNumbersBackTyping() {
+  if (!numbersMode || !card || !card.classList.contains('flipped')) return;
+
+  const cardBack = document.querySelector('.card-back');
+  if (!cardBack) return;
+
+  clearTimeout(typingTimeout);
+  clearNumbersTyping();
+  removeProgressBar();
+
+  const existingTypingText = document.getElementById('typing-text');
+  if (existingTypingText) {
+    existingTypingText.textContent = '';
+    existingTypingText.style.display = 'none';
+  }
+
+  removeNumbersGlitchText();
+
+  const mainText = `Мы помним всех, кто был с нами - тех, кто поддерживал в трудные моменты и не отвернулся, а помог, как мог. Спасибо вам за всё хорошее, за время, проведённое вместе. Даже если вы этого не прочтёте, мы искренне желаем вам всего наилучшего. Мы помним и тех, кто был против нас - и вам тоже желаем добра. Спасибо за всё.`;
+  const signText = `309sq. 2022-2024`;
+
+  const container = document.createElement('div');
+  container.className = 'numbers-glitch-text';
+
+  const textContainer = document.createElement('div');
+  textContainer.className = 'main-text';
+  container.appendChild(textContainer);
+
+  createProgressBar(document.querySelector('.card'), false);
+
+  const signContainer = document.createElement('div');
+  signContainer.className = 'sign-text';
+  container.appendChild(signContainer);
+  cardBack.appendChild(container);
+
+  let mainI = 0;
+  const totalLength = mainText.length;
+  pendingNumbersTyping = false;
+
+  function glitchType() {
+    if (!numbersMode || !card || !card.classList.contains('flipped')) return;
+
+    if (mainI < mainText.length) {
+      const finalText = mainText.slice(0, mainI);
+      let currentText = finalText;
+
+      const scrambleLength = 5 + Math.floor(Math.random() * 3);
+      for (let j = 0; j < scrambleLength; j++) {
+        currentText += String.fromCharCode(0x30A0 + Math.floor(Math.random() * 96));
+      }
+
+      textContainer.innerHTML = currentText.replace(/\n/g, '<br>');
+      updateProgressBar(((mainI + 1) / totalLength) * 100);
+      mainI++;
+
+      numbersTypingTimeout = setTimeout(() => {
+        requestAnimationFrame(glitchType);
+      }, 15);
+    } else {
+      textContainer.innerHTML = mainText.replace(/\n/g, '<br>');
+      signContainer.innerHTML = signText;
+      updateProgressBar(100);
+      setTimeout(() => {
+        if (typingProgressBar) {
+          typingProgressBar.style.opacity = '0';
+          setTimeout(removeProgressBar, 300);
+        }
+      }, 500);
+      clearNumbersTyping();
+    }
+  }
+
+  glitchType();
+}
+
+function setImageSrc(img, src) {
+  if (!img || !src) return;
+  img.removeAttribute('srcset');
+  img.srcset = '';
+  img.setAttribute('src', src);
+  img.src = src;
+}
+
 // ============================================
 // NUMBERS MODE FUNCTIONALITY
 // ============================================
@@ -286,11 +395,11 @@ function setupAvatarClick() {
     clearAllTimers();
     
     if (!numbersMode) {
-    avatarImg.setAttribute('data-original-src', avatarImg.src);
-    bannerPic.setAttribute('data-original-src', bannerPic.src);
+    avatarImg.setAttribute('data-original-src', avatarImg.getAttribute('src') || avatarImg.src);
+    bannerPic.setAttribute('data-original-src', bannerPic.getAttribute('src') || bannerPic.src);
 
-    avatarImg.src = 'Image/avatar309.jpg';
-    bannerPic.src = 'Image/bg309.jpg';
+    setImageSrc(avatarImg, 'Image/avatar309.jpg');
+    setImageSrc(bannerPic, 'Image/bg309.jpg');
     if (background) background.classList.add('numbers');
     cardEl.classList.add('numbers-mode');
     
@@ -342,82 +451,22 @@ function setupAvatarClick() {
       }
     }, 1000);
 
-    setTimeout(() => {
-      const cardBack = document.querySelector('.card-back');
-      if (!cardBack) return;
-
-      clearTimeout(typingTimeout);
-      removeProgressBar();
-      createProgressBar();
-      
-      // Clear existing typing text completely
-      const existingTypingText = document.getElementById('typing-text');
-      if (existingTypingText) {
-        existingTypingText.textContent = '';
-        existingTypingText.style.display = 'none';
-      }
-      
-      // Remove old glitch text if exists
-      let oldGlitch = cardBack.querySelector('.numbers-glitch-text');
-      if (oldGlitch) oldGlitch.remove();
-      
-      let mainText = `Мы помним всех, кто был с нами - тех, кто поддерживал в трудные моменты и не отвернулся, а помог, как мог. Спасибо вам за всё хорошее, за время, проведённое вместе. Даже если вы этого не прочтёте, мы искренне желаем вам всего наилучшего. Мы помним и тех, кто был против нас - и вам тоже желаем добра. Спасибо за всё.`;
-      let signText = `309sq. 2022-2024`;
-      
-      let container = document.createElement('div');
-      container.className = 'numbers-glitch-text';
-      
-      let textContainer = document.createElement('div');
-      textContainer.className = 'main-text';
-      container.appendChild(textContainer);
-      
-      let signContainer = document.createElement('div');
-      signContainer.className = 'sign-text';
-      container.appendChild(signContainer);
-      cardBack.appendChild(container);
-      
-      let mainI = 0;
-      const totalLength = mainText.length;
-      function glitchType() {
-        if (mainI < mainText.length) {
-          let finalText = mainText.slice(0, mainI);
-          let currentText = finalText;
-
-          let scrambleLength = 5 + Math.floor(Math.random() * 3);
-          for (let j = 0; j < scrambleLength; j++) {
-            currentText += String.fromCharCode(0x30A0 + Math.floor(Math.random() * 96));
-          }
-            
-          textContainer.innerHTML = currentText.replace(/\n/g, '<br>');
-          updateProgressBar(((mainI + 1) / totalLength) * 100);
-          mainI++;
-            
-          typingTimeout = setTimeout(() => {
-            requestAnimationFrame(glitchType);
-          }, 15);
-        } else {
-          textContainer.innerHTML = mainText.replace(/\n/g, '<br>');
-          signContainer.innerHTML = signText;
-          updateProgressBar(100);
-          setTimeout(() => {
-            if (typingProgressBar) {
-              typingProgressBar.style.opacity = '0';
-              setTimeout(removeProgressBar, 300);
-            }
-          }, 500);
-        }
-      }
-      glitchType();
-    }, 800);
     numbersMode = true;
+    pendingNumbersTyping = true;
+    setTimeout(() => {
+      if (!numbersMode || !pendingNumbersTyping) return;
+      if (card && card.classList.contains('flipped')) {
+        startNumbersBackTyping();
+      }
+    }, 200);
     
     // Update snowflake colors if snow is active
     if (snowActive) {
       updateSnowflakeColors();
     }
   } else {
-    avatarImg.src = avatarImg.getAttribute('data-original-src');
-    bannerPic.src = bannerPic.getAttribute('data-original-src');
+    setImageSrc(avatarImg, avatarImg.getAttribute('data-original-src'));
+    setImageSrc(bannerPic, bannerPic.getAttribute('data-original-src'));
     if (background) background.classList.remove('numbers');
     cardEl.classList.remove('numbers-mode');
     
@@ -433,7 +482,10 @@ function setupAvatarClick() {
     
     clearAllTimers();
     clearTimeout(typingTimeout);
+    clearNumbersTyping();
+    pendingNumbersTyping = false;
     removeProgressBar();
+    removeNumbersGlitchText();
     nickname.textContent = originalNickname;
     
     // Re-enable parallax
@@ -453,8 +505,7 @@ function setupAvatarClick() {
     setTimeout(() => {
       const cardBack = document.querySelector('.card-back');
       if (!cardBack) return;
-      let oldGlitch = cardBack.querySelector('.numbers-glitch-text');
-      if (oldGlitch) oldGlitch.remove();
+      removeNumbersGlitchText();
       
       // Restore typing text display
       const existingTypingText = document.getElementById('typing-text');
@@ -525,14 +576,19 @@ function setupKeyboardNavigation() {
       if (!e.target.closest('#avatar') && !e.target.closest('.avatar')) {
         card.classList.toggle('flipped');
         if (card.classList.contains('flipped')) {
-          if (!numbersMode) {
+          if (numbersMode) {
+            startNumbersBackTyping();
+          } else {
             setTimeout(startTyping, 700);
           }
         } else {
           const typingElement = document.getElementById('typing-text');
           if (typingElement) typingElement.textContent = '';
           clearTimeout(typingTimeout);
+          clearNumbersTyping();
+          pendingNumbersTyping = numbersMode;
           removeProgressBar();
+          removeNumbersGlitchText();
         }
         card.setAttribute('aria-expanded', String(card.classList.contains('flipped')));
       }
@@ -765,7 +821,6 @@ function spawnSakuraPetal(isDeep = false) {
 
 function startSakura() {
   if (!document.body || sakuraContainer || sakuraActive) return;
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   sakuraActive = true;
   preloadSakuraImage();
@@ -820,6 +875,10 @@ function setupSnowToggle() {
     
     if (isActive) {
       startSnow();
+      if (snowContainer && snowContainer.children.length === 0) {
+        const flake = createSnowflake(false);
+        snowContainer.appendChild(flake);
+      }
     } else {
       stopSnow();
     }
@@ -838,6 +897,9 @@ function setupSakuraToggle() {
 
     if (isActive) {
       startSakura();
+      if (sakuraContainer && sakuraContainer.children.length === 0 && sakuraImageLoaded) {
+        spawnSakuraPetal(false);
+      }
     } else {
       stopSakura();
     }

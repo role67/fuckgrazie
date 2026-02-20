@@ -85,6 +85,7 @@ body {
   min-height: 100vh;
   overflow: hidden;
   position: relative;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ============================================
@@ -549,6 +550,12 @@ body {
   overflow: visible;
   animation: cardFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform, box-shadow;
+}
+
+.card,
+.card * {
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .card:hover:not(.flipped) {
@@ -1338,11 +1345,12 @@ body {
   margin: 0;
   position: absolute;
   top: 32px;
+  bottom: 24px;
   left: 0;
   right: 0;
   width: 100%;
   z-index: 3;
-  padding: 0 14px;
+  padding: 0 14px 10px;
   box-sizing: border-box;
   word-break: break-word;
   overflow-wrap: break-word;
@@ -1350,6 +1358,13 @@ body {
   letter-spacing: 0.02em;
   filter: none;
   animation: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.numbers-glitch-text .main-text {
+  flex: 1;
+  min-height: 0;
 }
 
 .sign-text {
