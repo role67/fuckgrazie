@@ -3,55 +3,98 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>@fuckgrazie</title>
+  <meta name="description" content="Денис Валапоп A.K.A fuckgrazie - Криптогарант и специалист в сфере социальной инженерии и OSINT-расследований">
+  <meta name="keywords" content="криптогарант, OSINT, социальная инженерия, fuckgrazie">
+  <meta name="author" content="@fuckgrazie">
+  <meta name="theme-color" content="#0741a4">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="@fuckgrazie - Криптогарант и OSINT специалист">
+  <meta property="og:description" content="Криптогарант и ведущий специалист в сфере социальной инженерии и OSINT-расследований">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="@fuckgrazie">
+  <meta name="twitter:description" content="Криптогарант и ведущий специалист в сфере социальной инженерии и OSINT-расследований">
+  
+  <title>@fuckgrazie - Криптогарант и OSINT специалист</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="Image/avatar.jpg" as="image">
+  <link rel="preload" href="Image/bg1.jpg" as="image">
 </head>
 <body>
-  <div class="background" id="background"></div>
+  <div class="background" id="background" aria-hidden="true"></div>
+  <button class="menu-toggle" id="menuToggle" aria-label="Открыть меню" type="button">
+    <img src="Image/3line.svg" alt="Меню" class="menu-icon">
+  </button>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="sidebar" id="sidebar">
+    <button class="sidebar-item snow-toggle" id="snowToggle" type="button" aria-pressed="false" aria-label="Включить снег">
+      <img src="Image/snowflake.svg" alt="Снег" class="snow-icon">
+      <span class="sidebar-item-label" id="snowLabel">Снег</span>
+    </button>
+    <button class="sidebar-item sakura-toggle" id="sakuraToggle" type="button" aria-pressed="false" aria-label="Toggle sakura petals">
+      <img src="Image/sakuraicon.png" alt="Sakura" class="sidebar-item-icon sakura-icon">
+      <span class="sidebar-item-label" id="sakuraLabel">Сакура</span>
+    </button>
+    <button class="sidebar-item" id="translateToggle" type="button" aria-label="Переключить язык">
+      <img src="Image/translate.svg" alt="Язык" class="sidebar-item-icon">
+      <span class="sidebar-item-label" id="translateLabel">Язык</span>
+    </button>
+  </div>
   <div class="container">
-    <div class="card" id="profileCard">
+    <article class="card" id="profileCard" aria-label="Профиль @fuckgrazie">
       <div class="card-face card-front">
-        <div class="banner-wrap">
+        <header class="banner-wrap">
           <div class="banner-img">
-            <img src="Image/bg1.jpg" alt="banner" class="banner-pic">
+            <img src="Image/bg1.jpg" alt="Фоновое изображение профиля" class="banner-pic" loading="lazy">
           </div>
-          <div class="avatar" id="avatar">
-            <img src="Image/avatar.jpg" alt="avatar" id="avatarImg">
-          </div>
-        </div>
+          <button class="avatar" id="avatar" aria-label="Переключить режим отображения" type="button">
+            <img src="Image/avatar.jpg" alt="Аватар @fuckgrazie" id="avatarImg" loading="eager">
+          </button>
+        </header>
         <div class="profile-info">
           <h1 class="nickname">@fuckgrazie</h1>
-          <div class="bubble-group">
-            <div class="bubble">гарант сделок</div>
-            <div class="bubble">ceo of newermxre</div>
+          <div class="bubble-group" role="list">
+            <span class="bubble" role="listitem">гарант сделок</span>
+            <span class="bubble" role="listitem">ceo of newermxre</span>
           </div>
-          <div class="location"><img src="Image/geo.png" alt="Location" class="geo-icon">London</div>
-          <div class="links">
-            <a href="https://on.soundcloud.com/PjDvs4FWxVFHalvbLV" target="_blank" title="SoundCloud">
-              <img src="Image/sc.png" alt="SoundCloud" class="icon-logo">
-            </a>
-            <a href="https://vk.com/anonymous666" target="_blank" title="VK">
-              <img src="Image/vk.png" alt="VK" class="icon-logo">
-            </a>
-            <a href="https://t.me/fuckgrazie" target="_blank" title="Telegram">
-              <img src="Image/tg.png" alt="Telegram" class="icon-logo">
-            </a>
+          <div class="location" aria-label="Местоположение: London">
+            <img src="Image/geo.png" alt="" class="geo-icon" aria-hidden="true">
+            <span>London</span>
           </div>
+          <nav class="links" aria-label="Социальные сети">
+            <a href="https://on.soundcloud.com/PjDvs4FWxVFHalvbLV" target="_blank" rel="noopener noreferrer" title="SoundCloud" aria-label="Перейти на SoundCloud">
+              <img src="Image/sc.svg" alt="SoundCloud" class="icon-logo" loading="lazy">
+            </a>
+            <a href="https://vk.com/anonymous666" target="_blank" rel="noopener noreferrer" title="VK" aria-label="Перейти на VK">
+              <img src="Image/vk.svg" alt="VK" class="icon-logo" loading="lazy">
+            </a>
+            <a href="https://t.me/fuckgrazie" target="_blank" rel="noopener noreferrer" title="Telegram" aria-label="Перейти в Telegram">
+              <img src="Image/tg.svg" alt="Telegram" class="icon-logo" loading="lazy">
+            </a>
+          </nav>
           <div class="reviews-btn-wrap">
           </div>
         </div>
       </div>
       <div class="card-face card-back">
-        <div class="about">
-          <span id="typing-text"></span>
-        </div>
-        <div class="back-btns-wrap">
-          <a href="https://t.me/rew_deko_666" target="_blank" class="back-btn">ОТЗЫВЫ</a>
-          <a href="https://t.me/newermxre" target="_blank" class="back-btn">ТГК</a>
-        </div>
+        <section class="about" aria-label="О себе">
+          <span id="typing-text" aria-live="polite" aria-atomic="true"></span>
+        </section>
+        <nav class="back-btns-wrap" aria-label="Дополнительные ссылки">
+          <a href="https://t.me/rew_deko_666" target="_blank" rel="noopener noreferrer" class="back-btn">
+            <span>ОТЗЫВЫ</span>
+          </a>
+          <a href="https://t.me/newermxre" target="_blank" rel="noopener noreferrer" class="back-btn">
+            <span>ТГК</span>
+          </a>
+        </nav>
       </div>
-    </div>
+    </article>
   </div>
   <script src="script.js"></script>
 </body>
 </html>
+

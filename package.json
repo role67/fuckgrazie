@@ -1,0 +1,17 @@
+{
+  "name": "kykos-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static profile site with linting and smoke tests",
+  "scripts": {
+    "lint:js": "eslint script.js tests/**/*.js",
+    "lint:css": "stylelint style.css",
+    "lint": "npm run lint:js && npm run lint:css",
+    "test:smoke": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "eslint": "^9.20.0",
+    "stylelint": "^16.11.0"
+  }
+}
