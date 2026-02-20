@@ -1387,47 +1387,46 @@ body {
     top: 47%;
   }
 
+  .card-front {
+    justify-content: flex-start;
+  }
+
   .card-back {
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    overflow: hidden;
   }
 
   .about {
-    flex: 1;
+    flex: 0 0 auto;
     height: auto;
     min-height: 0;
     justify-content: flex-start;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: var(--spacing-lg) var(--spacing-md) 10px;
+    overflow: visible;
+    padding: var(--spacing-lg) var(--spacing-md) 0;
   }
 
   .about #typing-text {
     min-height: 0;
     margin-bottom: 0;
-    padding: 0 0 10px;
+    padding: 0;
     line-height: 1.55;
+    font-size: 1.04rem;
   }
 
   .back-btns-wrap {
-    position: static;
+    position: relative !important;
     left: auto;
     right: auto;
     bottom: auto;
-    margin-top: 0;
+    margin-top: var(--spacing-sm);
     padding: 0 var(--spacing-md) var(--spacing-md);
+    flex-shrink: 0;
   }
 
-  .background::before,
-  .card,
-  .card-face,
-  .sidebar,
-  .menu-toggle,
-  .bubble,
-  .back-btn {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+  .typing-progress {
+    display: none !important;
   }
 
   .card {
@@ -1457,7 +1456,11 @@ body {
   .card {
     width: 100%;
     max-width: 360px;
-    min-height: 400px;
+    min-height: 420px;
+  }
+
+  .card.flipped {
+    min-height: 520px;
   }
   
   .banner-wrap {
@@ -1465,7 +1468,7 @@ body {
   }
 
   .banner-pic {
-    object-position: center 40%;
+    object-position: center center;
   }
   
   .banner-wrap .avatar {
