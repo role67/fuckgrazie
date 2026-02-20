@@ -1179,9 +1179,11 @@ body {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-radius: var(--radius-lg);
-  width: 0%;
-  max-width: calc(100% - 24px);
-  transition: width 0.1s linear;
+  width: calc(100% - 24px);
+  max-width: none;
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 0.1s linear;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 10;
 }
@@ -1380,6 +1382,72 @@ body {
 /* ============================================
    RESPONSIVE DESIGN
    ============================================ */
+@media screen and (max-width: 768px) {
+  .container {
+    top: 47%;
+  }
+
+  .card-back {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .about {
+    flex: 1;
+    height: auto;
+    min-height: 0;
+    justify-content: flex-start;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: var(--spacing-lg) var(--spacing-md) 10px;
+  }
+
+  .about #typing-text {
+    min-height: 0;
+    margin-bottom: 0;
+    padding: 0 0 10px;
+    line-height: 1.55;
+  }
+
+  .back-btns-wrap {
+    position: static;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    margin-top: 0;
+    padding: 0 var(--spacing-md) var(--spacing-md);
+  }
+
+  .background::before,
+  .card,
+  .card-face,
+  .sidebar,
+  .menu-toggle,
+  .bubble,
+  .back-btn {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .card {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
+  }
+
+  .background::before {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  .sakura-petal-core {
+    filter: none;
+  }
+
+  .card.numbers-mode .nickname,
+  .sign-text {
+    animation: none !important;
+  }
+}
+
 @media screen and (max-width: 480px) {
   .container {
     width: 100%;
@@ -1394,6 +1462,10 @@ body {
   
   .banner-wrap {
     height: 160px;
+  }
+
+  .banner-pic {
+    object-position: center 40%;
   }
   
   .banner-wrap .avatar {
@@ -1421,7 +1493,6 @@ body {
   .back-btns-wrap {
     flex-direction: column;
     gap: var(--spacing-sm);
-    bottom: var(--spacing-md);
   }
   
   .back-btn {
@@ -1491,6 +1562,31 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  /* Keep weather effects visible even when reduced motion is enabled */
+  .snowflake {
+    animation-name: snowfall !important;
+    animation-duration: 12s !important;
+    animation-iteration-count: infinite !important;
+  }
+
+  .snowflake-deep {
+    animation-name: snowfall-deep !important;
+    animation-duration: 16s !important;
+    animation-iteration-count: infinite !important;
+  }
+
+  .sakura-petal {
+    animation-name: sakura-fall !important;
+    animation-duration: var(--fall-duration, 14s) !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .sakura-petal-core {
+    animation-name: sakura-sway !important;
+    animation-duration: var(--sway-duration, 2.5s) !important;
+    animation-iteration-count: infinite !important;
   }
 }
 

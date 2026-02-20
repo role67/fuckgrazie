@@ -184,17 +184,12 @@ function removeProgressBar() {
 
 function updateProgressBar(progress) {
   if (typingProgressBar) {
+    const normalized = Math.max(0, Math.min(progress, 100));
     if (typingProgressBar.classList.contains('typing-progress-inline')) {
-      typingProgressBar.style.width = `${progress}%`;
+      typingProgressBar.style.width = `${normalized}%`;
       return;
     }
-    const card = document.querySelector('.card');
-    if (card) {
-      const cardWidth = card.offsetWidth;
-      const maxWidth = cardWidth - 24; // 12px margin on each side
-      const width = (progress / 100) * maxWidth;
-      typingProgressBar.style.width = `${width}px`;
-    }
+    typingProgressBar.style.transform = `scaleX(${normalized / 100})`;
   }
 }
 
@@ -219,6 +214,7 @@ function startTyping() {
   let finalText = '';
   let scrambleLength = 5;
   const totalLength = currentContent.length;
+  const typingDelay = isMobilePerformanceMode() ? 22 : 15;
 
   function scramble() {
     if (i < currentContent.length) {
@@ -239,7 +235,7 @@ function startTyping() {
 
       typingTimeout = setTimeout(() => {
         requestAnimationFrame(scramble);
-      }, 15);
+      }, typingDelay);
     } else {
       typingElement.textContent = finalText;
       updateProgressBar(100);
@@ -308,6 +304,7 @@ function startNumbersBackTyping() {
 
   let mainI = 0;
   const totalLength = mainText.length;
+  const typingDelay = isMobilePerformanceMode() ? 22 : 15;
   pendingNumbersTyping = false;
 
   function glitchType() {
@@ -328,7 +325,7 @@ function startNumbersBackTyping() {
 
       numbersTypingTimeout = setTimeout(() => {
         requestAnimationFrame(glitchType);
-      }, 15);
+      }, typingDelay);
     } else {
       textContainer.innerHTML = mainText.replace(/\n/g, '<br>');
       signContainer.innerHTML = signText;
@@ -638,13 +635,21 @@ let sakuraContainer = null;
 let sakuraInterval = null;
 let sakuraImageLoaded = false;
 let sakuraImageChecked = false;
+const isAndroid = /Android/i.test(navigator.userAgent || '');
+
+function isMobilePerformanceMode() {
+  return isAndroid || window.innerWidth <= 768;
+}
 
 function createSnowflake(isDeep = false) {
+  const mobilePerf = isMobilePerformanceMode();
   const snowflake = document.createElement('div');
   snowflake.className = isDeep ? 'snowflake snowflake-deep' : 'snowflake';
   
   // Create circular snowflake
-  const size = isDeep ? (Math.random() * 4 + 3) : (Math.random() * 6 + 4);
+  const size = mobilePerf
+    ? (isDeep ? (Math.random() * 3 + 2.5) : (Math.random() * 4 + 3.2))
+    : (isDeep ? (Math.random() * 4 + 3) : (Math.random() * 6 + 4));
   snowflake.style.width = size + 'px';
   snowflake.style.height = size + 'px';
   snowflake.style.borderRadius = '50%';
@@ -659,14 +664,22 @@ function createSnowflake(isDeep = false) {
   }
   
   snowflake.style.left = Math.random() * 100 + '%';
-  // Slower animation - 0.2-0.4x speed (multiply duration by 2.5-5)
-  const baseDuration = (Math.random() * 3 + 2) * 3.5; // 3.5x slower on average
+  const baseDuration = mobilePerf
+    ? (Math.random() * 2.2 + 2.4) * 3.2
+    : (Math.random() * 3 + 2) * 3.5;
   snowflake.style.animationDuration = baseDuration + 's';
   return snowflake;
 }
 
 function startSnow() {
   if (snowActive || !document.body) return;
+
+  const mobilePerf = isMobilePerformanceMode();
+  const initialCount = mobilePerf ? 18 : 30;
+  const initialStep = mobilePerf ? 180 : 300;
+  const spawnInterval = mobilePerf ? 700 : 500;
+  const frontChance = mobilePerf ? 0.6 : 0.7;
+  const deepChance = mobilePerf ? 0.38 : 0.5;
   
   snowActive = true;
   snowContainer = document.createElement('div');
@@ -674,7 +687,7 @@ function startSnow() {
   document.body.appendChild(snowContainer);
   
   // Create initial snowflakes
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < initialCount; i++) {
     setTimeout(() => {
       if (snowContainer && snowActive) {
         const flake = createSnowflake(Math.random() > 0.6);
@@ -687,14 +700,14 @@ function startSnow() {
           }
         }, duration + 200);
       }
-    }, i * 300);
+    }, i * initialStep);
   }
   
   // Add more snowflakes periodically
   snowInterval = setInterval(() => {
     if (snowContainer && snowActive) {
       // Front layer snowflakes (lighter, bigger)
-      if (Math.random() > 0.3) {
+      if (Math.random() < frontChance) {
         const flake = createSnowflake(false);
         if (snowContainer && snowActive) {
           snowContainer.appendChild(flake);
@@ -708,7 +721,7 @@ function startSnow() {
         }
       }
       // Deep layer snowflakes (darker, smaller)
-      if (Math.random() > 0.5) {
+      if (Math.random() < deepChance) {
         const flake = createSnowflake(true);
         if (snowContainer && snowActive) {
           snowContainer.appendChild(flake);
@@ -722,7 +735,7 @@ function startSnow() {
         }
       }
     }
-  }, 500);
+  }, spawnInterval);
   
   // Update existing snowflakes color when mode changes
   updateSnowflakeColors();
@@ -759,22 +772,33 @@ function stopSnow() {
 // ============================================
 // SAKURA PETALS ANIMATION
 // ============================================
-function preloadSakuraImage() {
+function preloadSakuraImage(forceRetry = false) {
+  if (forceRetry) {
+    sakuraImageChecked = false;
+    sakuraImageLoaded = false;
+  }
   if (sakuraImageChecked) return;
   sakuraImageChecked = true;
 
   const sakuraImg = new Image();
   sakuraImg.onload = () => {
     sakuraImageLoaded = true;
+    if (sakuraActive && sakuraContainer && sakuraContainer.children.length === 0) {
+      spawnSakuraPetal(false);
+      spawnSakuraPetal(true);
+    }
   };
   sakuraImg.onerror = () => {
     sakuraImageLoaded = false;
+    sakuraImageChecked = false; // Allow retry on next toggle/cycle
   };
-  sakuraImg.src = 'Image/sakura.png';
+  const cacheBuster = forceRetry ? `?v=${Date.now()}` : '';
+  sakuraImg.src = `Image/sakura.png${cacheBuster}`;
 }
 
 function createSakuraPetal(isDeep = false) {
   if (!sakuraImageLoaded) return null;
+  const mobilePerf = isMobilePerformanceMode();
 
   const petal = document.createElement('div');
   petal.className = isDeep ? 'sakura-petal sakura-petal-deep' : 'sakura-petal';
@@ -782,11 +806,15 @@ function createSakuraPetal(isDeep = false) {
   const petalCore = document.createElement('span');
   petalCore.className = 'sakura-petal-core';
 
-  const size = isDeep ? (Math.random() * 10 + 10) : (Math.random() * 12 + 14);
-  const fallDuration = isDeep ? (Math.random() * 7 + 16) : (Math.random() * 6 + 12);
+  const size = mobilePerf
+    ? (isDeep ? (Math.random() * 7 + 8) : (Math.random() * 9 + 10))
+    : (isDeep ? (Math.random() * 10 + 10) : (Math.random() * 12 + 14));
+  const fallDuration = mobilePerf
+    ? (isDeep ? (Math.random() * 5 + 15) : (Math.random() * 4 + 11))
+    : (isDeep ? (Math.random() * 7 + 16) : (Math.random() * 6 + 12));
   const swayDuration = Math.random() * 2 + 2;
-  const driftX = (Math.random() - 0.5) * (isDeep ? 180 : 260);
-  const swayX = Math.random() * 16 + 8;
+  const driftX = (Math.random() - 0.5) * (mobilePerf ? (isDeep ? 130 : 180) : (isDeep ? 180 : 260));
+  const swayX = mobilePerf ? (Math.random() * 10 + 6) : (Math.random() * 16 + 8);
   const spinDeg = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 420 + 240);
   const opacity = isDeep ? (Math.random() * 0.2 + 0.25) : (Math.random() * 0.35 + 0.45);
 
@@ -821,27 +849,39 @@ function spawnSakuraPetal(isDeep = false) {
 
 function startSakura() {
   if (!document.body || sakuraContainer || sakuraActive) return;
+  const mobilePerf = isMobilePerformanceMode();
+  const initialCount = mobilePerf ? 14 : 22;
+  const initialStep = mobilePerf ? 140 : 220;
+  const spawnInterval = mobilePerf ? 640 : 420;
+  const deepChance = mobilePerf ? 0.34 : 0.55;
 
   sakuraActive = true;
   preloadSakuraImage();
+  if (!sakuraImageLoaded) {
+    setTimeout(() => {
+      if (sakuraActive && !sakuraImageLoaded) {
+        preloadSakuraImage(true);
+      }
+    }, 900);
+  }
   sakuraContainer = document.createElement('div');
   sakuraContainer.className = 'sakura-container';
   document.body.appendChild(sakuraContainer);
 
-  for (let i = 0; i < 22; i++) {
+  for (let i = 0; i < initialCount; i++) {
     setTimeout(() => {
       if (!sakuraContainer) return;
       spawnSakuraPetal(Math.random() > 0.65);
-    }, i * 220);
+    }, i * initialStep);
   }
 
   sakuraInterval = setInterval(() => {
     if (!sakuraContainer) return;
     spawnSakuraPetal(false);
-    if (Math.random() > 0.45) {
+    if (Math.random() < deepChance) {
       spawnSakuraPetal(true);
     }
-  }, 420);
+  }, spawnInterval);
 }
 
 function stopSakura() {
@@ -896,10 +936,16 @@ function setupSakuraToggle() {
     this.setAttribute('aria-pressed', String(isActive));
 
     if (isActive) {
+      preloadSakuraImage(true);
       startSakura();
-      if (sakuraContainer && sakuraContainer.children.length === 0 && sakuraImageLoaded) {
+      if (sakuraContainer && sakuraContainer.children.length === 0) {
         spawnSakuraPetal(false);
       }
+      setTimeout(() => {
+        if (sakuraContainer && sakuraContainer.children.length === 0) {
+          spawnSakuraPetal(false);
+        }
+      }, 1200);
     } else {
       stopSakura();
     }
